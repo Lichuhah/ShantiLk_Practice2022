@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using ShantiLk.Api.Models.Common.Profile;
-using ShantiLk.Api.Models.Domain.Profile;
+using ShantiLk.Api.Models.ShantiClasses.Domain;
+using ShantiLk.Api.Models.SuaiClasses.Answers;
 
 namespace ShantiLk.Api.Controllers
 {
     public partial class ProfileController
     {
-        private async Task<ProfileData> h_GetProfile()
+        private async Task<ProfileInfo> h_GetProfile()
         {
             SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
             HttpResponseMessage resp = client.Get("https://pro.guap.ru/inside_s").Result;
@@ -16,7 +16,17 @@ namespace ShantiLk.Api.Controllers
             string profileid = result.Substring(i, i2 - i);
             resp = client.Get("https://pro.guap.ru/getstudentprofile/" + profileid).Result;
             result = resp.Content.ReadAsStringAsync().Result;
-            return (JsonConvert.DeserializeObject<ProfileAnswer>(result)).user;
+            ProfileAnswer answer = JsonConvert.DeserializeObject<ProfileAnswer>(result);
+            return new ProfileInfo
+            {
+                IdProfile = answer.User.Id,
+                IdStudent = answer.Student.Id,
+                Email = answer.User.Email,
+                Phone = answer.User.Phone,
+                Name = answer.User.Name,
+                MiddleName = answer.User.MiddleName,
+                LastName = answer.User.LastName
+            };
         }
     }
 }

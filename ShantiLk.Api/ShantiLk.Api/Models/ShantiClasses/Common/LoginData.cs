@@ -1,4 +1,4 @@
-﻿namespace ShantiLk.Api.Models.Common.Auth
+﻿namespace ShantiLk.Api.Models.ShantiClasses.Common
 {
     public class LoginData
     {

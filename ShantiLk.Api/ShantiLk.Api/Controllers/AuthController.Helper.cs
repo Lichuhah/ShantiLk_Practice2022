@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using ShantiLk.Api.Models.Common.Auth;
+using ShantiLk.Api.Models.ShantiClasses.Common;
 using System.Security.Claims;
 
 namespace ShantiLk.Api.Controllers

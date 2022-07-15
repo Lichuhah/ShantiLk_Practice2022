@@ -19,8 +19,8 @@ namespace ShantiLk.Api
         {
             CookieContainer = new CookieContainer();
             var claims = user.Claims.Select(x => x.Value).ToList();
-            AddCookie("SessionId", claims[1]);
-            AddCookie("SharedId", claims[2]);
+            AddCookie("PHPSESSID", claims[1]);
+            AddCookie("sharedsessioID", claims[2]);
             EncodedValues = new List<KeyValuePair<string, string>>();
         }
 

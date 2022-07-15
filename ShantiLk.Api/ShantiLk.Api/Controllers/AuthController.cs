@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ShantiLk.Api.Models.Common.Auth;
+using ShantiLk.Api.Models.ShantiClasses.Common;
 
 namespace ShantiLk.Api.Controllers
 {
