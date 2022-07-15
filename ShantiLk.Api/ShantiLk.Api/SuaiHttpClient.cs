@@ -1,44 +1,33 @@
-﻿using Newtonsoft.Json;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Net;
 
 namespace ShantiLk.Api
 {
-    public class ShantiHttpClient
+    public class SuaiHttpClient
     {
-        ClaimsPrincipal User { get; set; }
         public CookieContainer CookieContainer { get; set; }
-        public StringContent Body { get; set; }
-        public ShantiHttpClient()
+        public FormUrlEncodedContent FormUrlEncodedContent { get; set; }
+        public List<KeyValuePair<string, string>> EncodedValues { get; set; }
+
+        public SuaiHttpClient()
         {
             CookieContainer = new CookieContainer();
-        }
-        public ShantiHttpClient(ClaimsPrincipal user)
-        {
-            User = user;
-            CookieContainer = new CookieContainer();
+            EncodedValues = new List<KeyValuePair<string, string>>();
         }
 
         public void AddCookie(string name, string value)
         {
-            CookieContainer.Add(new Cookie(name, value, "/", ""));
+            CookieContainer.Add(new Cookie(name, value, "/", ".guap.ru"));
         }
 
-        public void SetBody(object item)
+        public void AddFormEncoded(string name, string value)
         {
-            Body = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
+            EncodedValues.Add(new KeyValuePair<string, string>(name, value));
         }
 
         private HttpClient CreateClient()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
-            if (User != null)
-            {
-                var claims = User.Claims.Select(x => x.Value).ToList();
-                AddCookie("SessionId", claims[1]);
-                AddCookie("SharedId", claims[2]);
-            }
+            clientHandler.AllowAutoRedirect = false;
             if (CookieContainer.Count > 0)
                 clientHandler.CookieContainer = CookieContainer;
             return new HttpClient(clientHandler);
@@ -48,7 +37,7 @@ namespace ShantiLk.Api
         {
             HttpClient client = CreateClient();
             HttpResponseMessage responce = await client.GetAsync(url);
-            if (responce.IsSuccessStatusCode)
+            if (responce.IsSuccessStatusCode || responce.StatusCode == HttpStatusCode.Found)
                 return responce;
             else throw new Exception(responce.StatusCode.ToString());
         }
@@ -56,9 +45,10 @@ namespace ShantiLk.Api
         public async Task<HttpResponseMessage> Post(string url)
         {
             HttpClient client = CreateClient();
-            var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = Body != null ? Body : new StringContent("") };
+            FormUrlEncodedContent = new FormUrlEncodedContent(EncodedValues);
+            var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = FormUrlEncodedContent };
             HttpResponseMessage responce = await client.SendAsync(req);
-            if (responce.IsSuccessStatusCode)
+            if (responce.IsSuccessStatusCode || responce.StatusCode == HttpStatusCode.Found)
                 return responce;
             else throw new Exception(responce.StatusCode.ToString());
         }
