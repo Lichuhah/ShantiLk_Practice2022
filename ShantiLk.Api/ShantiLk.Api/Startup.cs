@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.OpenApi.Models;
 
 namespace ShantiLk.Api
 {
@@ -16,6 +17,7 @@ namespace ShantiLk.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(opt => { opt.EnableEndpointRouting = false; opt.Filters.Add(new AuthorizeFilter()); }).AddNewtonsoftJson();
+            services.AddControllers();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -31,6 +33,8 @@ namespace ShantiLk.Api
                 options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.None;
                 options.Secure = CookieSecurePolicy.None;
             });
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +54,9 @@ namespace ShantiLk.Api
 
             app.UseRouting();
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
+          
             app.UseCookiePolicy();
 
             app.UseAuthentication();

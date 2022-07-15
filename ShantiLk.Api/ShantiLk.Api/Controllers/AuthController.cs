@@ -5,6 +5,7 @@ using ShantiLk.Api.Models.Common.Auth;
 
 namespace ShantiLk.Api.Controllers
 {
+    [Controller]
     [Route("/Auth")]
     public partial class AuthController : ControllerBase
     {
@@ -30,9 +31,9 @@ namespace ShantiLk.Api.Controllers
         }
 
         [Route("CheckLogin")]
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
-        [AllowAnonymous]
         [ProducesResponseType(403, Type = typeof(void))]
         public ActionResult CheckLogin()
         {

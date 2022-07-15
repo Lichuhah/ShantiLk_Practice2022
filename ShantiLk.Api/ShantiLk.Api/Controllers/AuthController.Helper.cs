@@ -19,9 +19,7 @@ namespace ShantiLk.Api.Controllers
 
         private async Task<bool> h_Logout()
         {
-            SuaiHttpClient client = new SuaiHttpClient();
-            client.AddCookie("PHPSESSID", Request.Cookies["SessionId"]);
-            client.AddCookie("sharedsessioID", Request.Cookies["SharedId"]);
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
             var responce = await client.Get("https://pro.guap.ru/user/logout");         
             if (responce.StatusCode == System.Net.HttpStatusCode.Found)
             {

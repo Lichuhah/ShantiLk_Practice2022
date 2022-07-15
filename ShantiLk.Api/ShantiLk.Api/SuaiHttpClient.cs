@@ -1,16 +1,26 @@
 ﻿using System.Net;
+using System.Security.Claims;
 
 namespace ShantiLk.Api
 {
     public class SuaiHttpClient
     {
-        public CookieContainer CookieContainer { get; set; }
-        public FormUrlEncodedContent FormUrlEncodedContent { get; set; }
-        public List<KeyValuePair<string, string>> EncodedValues { get; set; }
+        private CookieContainer CookieContainer { get; set; }
+        private FormUrlEncodedContent FormUrlEncodedContent { get; set; }
+        private List<KeyValuePair<string, string>> EncodedValues { get; set; }
 
         public SuaiHttpClient()
         {
             CookieContainer = new CookieContainer();
+            EncodedValues = new List<KeyValuePair<string, string>>();
+        }
+
+        public SuaiHttpClient(ClaimsPrincipal user)
+        {
+            CookieContainer = new CookieContainer();
+            var claims = user.Claims.Select(x => x.Value).ToList();
+            AddCookie("SessionId", claims[1]);
+            AddCookie("SharedId", claims[2]);
             EncodedValues = new List<KeyValuePair<string, string>>();
         }
 
