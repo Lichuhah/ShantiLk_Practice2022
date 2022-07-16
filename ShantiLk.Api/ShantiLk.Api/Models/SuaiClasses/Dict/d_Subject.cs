@@ -11,6 +11,6 @@ namespace ShantiLk.Api.Models.SuaiClasses.Dict
         public string Name { get; set; }
 
         [JsonProperty("semester")]
-        public int SemesterNumber { get; set; }
+        public int? SemesterNumber { get; set; }
     }
 }
