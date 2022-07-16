@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ShantiLk.Api.Models.ShantiClasses.Domain;
+using ShantiLk.Api.Models.ShantiClasses.Profile;
 using ShantiLk.Api.Models.SuaiClasses.Answers;
 
 namespace ShantiLk.Api.Controllers
@@ -16,7 +16,7 @@ namespace ShantiLk.Api.Controllers
             string profileid = result.Substring(i, i2 - i);
             resp = client.Get("https://pro.guap.ru/getstudentprofile/" + profileid).Result;
             result = resp.Content.ReadAsStringAsync().Result;
-            ProfileAnswer answer = JsonConvert.DeserializeObject<ProfileAnswer>(result);
+            s_ProfileAnswer answer = JsonConvert.DeserializeObject<s_ProfileAnswer>(result);
             return new ProfileInfo
             {
                 IdProfile = answer.User.Id,

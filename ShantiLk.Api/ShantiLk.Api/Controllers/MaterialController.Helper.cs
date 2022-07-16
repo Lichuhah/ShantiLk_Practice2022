@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ShantiLk.Api.Models.ShantiClasses.Dict;
-using ShantiLk.Api.Models.ShantiClasses.Domain;
+using ShantiLk.Api.Models.ShantiClasses.Material;
 using ShantiLk.Api.Models.SuaiClasses.Answers;
 
 namespace ShantiLk.Api.Controllers
@@ -13,14 +13,14 @@ namespace ShantiLk.Api.Controllers
             client.AddFormEncoded("iduser", "0");
             HttpResponseMessage resp = client.Post("https://pro.guap.ru/getstudentmaterialdictionaries/").Result;
             string result = resp.Content.ReadAsStringAsync().Result;
-            MaterialAnswer answer = JsonConvert.DeserializeObject<MaterialAnswer>(result);
+            s_MaterialAnswer answer = JsonConvert.DeserializeObject<s_MaterialAnswer>(result);
 
             if (SemesterId != null)
             {
                 client.AddFormEncoded("semester", SemesterId.ToString());
                 client.AddFormEncoded("subject", "0");
                 resp = client.Post("https://pro.guap.ru/getstudentmaterials/").Result;
-                answer.Materials = JsonConvert.DeserializeObject<MaterialAnswer>(resp.Content.ReadAsStringAsync().Result).Materials;
+                answer.Materials = JsonConvert.DeserializeObject<s_MaterialAnswer>(resp.Content.ReadAsStringAsync().Result).Materials;
             }     
             
             return answer.Materials.Select(x => new Material()
@@ -30,12 +30,12 @@ namespace ShantiLk.Api.Controllers
                 CreatedDate = x.CreatedDate,
                 Url = x.Url,
                 FileLink = x.FileLink,
-                Semester = new Semester
+                Semester = new DictSemester
                 {
                     Id = x.SemesterId,
                     Name = answer.Dictionares.Semesters.FirstOrDefault(y => y.Id == x.SemesterId).Name
                 },
-                Subject = new Subject()
+                Subject = new DictSubject()
                 {
                     Id = x.SubjectIdsArray[0],
                     Name = answer.Dictionares.Subjects.FirstOrDefault(y => y.Id == x.SubjectIdsArray[0]).Name

@@ -1,44 +1,44 @@
 ﻿using Newtonsoft.Json;
 using ShantiLk.Api.Models.ShantiClasses.Dict;
-using ShantiLk.Api.Models.ShantiClasses.Domain;
+using ShantiLk.Api.Models.ShantiClasses.Task;
 using ShantiLk.Api.Models.SuaiClasses.Answers;
-using ShantiLk.Api.Models.SuaiClasses.Domain;
-using Task = ShantiLk.Api.Models.ShantiClasses.Domain.Task;
+using ShantiLk.Api.Models.SuaiClasses.Task;
+using Task = ShantiLk.Api.Models.ShantiClasses.Task.Task;
 
 namespace ShantiLk.Api.Controllers
 {
     public partial class TaskController
     {
-        private async Task<List<Task>> h_GetTasks()
+        private async Task<List<TaskListItem>> h_GetTasks()
         {
             SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
             client.AddFormEncoded("iduser", "0");
             HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-tasksdictionaries/").Result;
             string result = resp.Content.ReadAsStringAsync().Result;
-            List<s_TaskListItem> data = JsonConvert.DeserializeObject<TaskListAnswer>(result).Tasks;
-            return data.Select(x => new Task()
+            List<s_TaskListItem> data = JsonConvert.DeserializeObject<s_TaskListAnswer>(result).Tasks;
+            return data.Select(x => new TaskListItem()
             {
                 Id = x.Id,
                 Name = x.Name,
                 DeadLine = x.DeadLine,
                 CurrentMark = x.CurrentMark,
                 MaxMark = x.MaxMark,
-                Type = new TaskType()
+                Type = new DictTaskType()
                 {
                     Id = x.TaskTypeId,
                     Name = x.TaskTypeName
                 },
-                Subject = new Subject()
+                Subject = new DictSubject()
                 {
                     Id = x.SubjectId,
                     Name = x.SubjectName
                 },
-                Semester = new Semester()
+                Semester = new DictSemester()
                 {
                     Id = x.SemesterNumber,
                     Name = x.SemesterName
                 },
-                Status = new Models.ShantiClasses.Dict.TaskStatus()
+                Status = new Models.ShantiClasses.Dict.DictTaskStatus()
                 {
                     Id = x.StatusId,
                     Name = x.StatusName
@@ -52,7 +52,7 @@ namespace ShantiLk.Api.Controllers
             client.AddFormEncoded("task_id", id.ToString());
             HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-task/" + id.ToString()).Result;
             string result = resp.Content.ReadAsStringAsync().Result;
-            TaskAnswer answer = JsonConvert.DeserializeObject<TaskAnswer>(result);
+            s_TaskAnswer answer = JsonConvert.DeserializeObject<s_TaskAnswer>(result);
             s_Task taskData = answer.TaskArray[0];
             return new Task()
             {
@@ -60,27 +60,27 @@ namespace ShantiLk.Api.Controllers
                 Name = taskData.Name,
                 DeadLine = taskData.DeadLine,
                 MaxMark = taskData.MaxMark,
-                Type = new TaskType()
+                Type = new DictTaskType()
                 {
                     Id = taskData.TaskTypeId,
                     Name = taskData.TaskTypeName
                 },
-                Subject = new Subject()
+                Subject = new DictSubject()
                 {
                     Id = taskData.SubjectId,
                     Name = taskData.SemesterName
                 },
-                Semester = new Semester()
+                Semester = new DictSemester()
                 {
                     Id = taskData.SemesterNumber,
                     Name = taskData.SemesterName
                 },
-                Teacher = new Teacher()
+                Teacher = new DictTeacher()
                 {
                     Id = taskData.TeacherId,
                     Name = taskData.TeacherName
                 },
-                File = new Models.ShantiClasses.Dict.File()
+                File = new DictFile()
                 {
                     Link = taskData.FileLink,
                     Name = taskData.FileName
@@ -94,7 +94,7 @@ namespace ShantiLk.Api.Controllers
                     TeacherComment = x.TeacherComment,
                     FileLink = x.FileLink,
                     CurrentMark = answer.Reports.LastOrDefault()?.Mark, 
-                    Status = new Models.ShantiClasses.Dict.TaskStatus
+                    Status = new Models.ShantiClasses.Dict.DictTaskStatus
                     {
                         Id = x.StatusId,
                         Name = x.StatusName
