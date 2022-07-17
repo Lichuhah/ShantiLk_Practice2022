@@ -152,5 +152,39 @@ namespace ShantiLk.Api.Controllers
             HttpResponseMessage resp = client.Get("https://pro.guap.ru/get-report/" + hash).Result;
             return resp.Content.ReadAsByteArrayAsync().Result;
         }
+
+        private async Task<Report> h_AddReport(int taskId, NewReport report)
+        {
+            Task task = this.h_GetTask(taskId).Result;
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            client.AddFormData(taskId.ToString(), "task_id");
+            client.AddFormData(report.Comment, "stud_comment");
+            client.AddFile(report.Data, "file", report.FileName);
+            client.AddFormData(task.Teacher.Id.ToString(), "prof_user");
+            client.AddFormData("1", "status");
+            HttpResponseMessage resp = client.PostFile("https://pro.guap.ru/reports").Result;
+            string answer = resp.Content.ReadAsStringAsync().Result;
+            s_Report newReport = JsonConvert.DeserializeObject<s_AddReportAnswer>(answer).NewReport;
+            return new Report
+            {
+                Id = newReport.Id,
+                StudentComment = newReport.StudentComment,
+                FileHash = newReport.FileLink.Substring(12),
+                Status = new DictTaskStatus
+                {
+                    Id = newReport.StatusId,
+                    Name = newReport.StatusName
+                },
+                DateCreated = newReport.CreatedDate  
+            };
+        }
+
+        private async Task<bool> h_DeleteReport(int reportId)
+        {
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            HttpResponseMessage resp = client.Delete("https://pro.guap.ru/reports/"+reportId.ToString()).Result;
+            string answer = resp.Content.ReadAsStringAsync().Result;
+            return JsonConvert.DeserializeObject<s_DeleteReportAnswer>(answer).Success == "success" ? true : false;
+        }
     }
 }

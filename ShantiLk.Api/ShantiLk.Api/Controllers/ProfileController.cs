@@ -11,7 +11,7 @@ namespace ShantiLk.Api.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetTasks()
+        public ActionResult Get()
         {
             try { return Content(JsonConvert.SerializeObject(h_GetProfile().Result)); }
             catch (Exception ex) { return Forbid(); }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ShantiLk.Api.Models.ShantiClasses.Task;
 
 namespace ShantiLk.Api.Controllers
 {
@@ -53,6 +54,26 @@ namespace ShantiLk.Api.Controllers
         public ActionResult GetReport(string ReportHash)
         {
             try { return Content(JsonConvert.SerializeObject(h_DownloadReport(ReportHash).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
+        [Route("AddReport")]
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult AddReport(int taskId, [FromBody] NewReport report)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_AddReport(taskId, report).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
+        [Route("DeleteReport")]
+        [HttpDelete]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult DeleteReport(int reportId)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_DeleteReport(reportId).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
 

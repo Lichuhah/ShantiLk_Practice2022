@@ -50,7 +50,7 @@ namespace ShantiLk.Api.Models.SuaiClasses.Task
         public string TeacherComment { get; set; }
 
         [JsonProperty("markpoint")]
-        public int Mark { get; set; }
+        public int? Mark { get; set; }
 
         [JsonProperty("group_id")]
         public int GroupId { get; set; }

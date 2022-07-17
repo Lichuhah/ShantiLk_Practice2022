@@ -7,12 +7,15 @@ namespace ShantiLk.Api
     {
         private CookieContainer CookieContainer { get; set; }
         private FormUrlEncodedContent FormUrlEncodedContent { get; set; }
+
+        private MultipartFormDataContent FormDataContent { get; set; }
         private List<KeyValuePair<string, string>> EncodedValues { get; set; }
 
         public SuaiHttpClient()
         {
             CookieContainer = new CookieContainer();
             EncodedValues = new List<KeyValuePair<string, string>>();
+            FormDataContent = new MultipartFormDataContent();
         }
 
         public SuaiHttpClient(ClaimsPrincipal user)
@@ -22,11 +25,23 @@ namespace ShantiLk.Api
             AddCookie("PHPSESSID", claims[1]);
             AddCookie("sharedsessioID", claims[2]);
             EncodedValues = new List<KeyValuePair<string, string>>();
+            FormDataContent = new MultipartFormDataContent();
         }
 
         public void AddCookie(string name, string value)
         {
             CookieContainer.Add(new Cookie(name, value, "/", ".guap.ru"));
+        }
+
+        public void AddFormData(string data, string key)
+        {
+            FormDataContent.Add(new StringContent(data), key);
+            
+        }
+
+        public void AddFile(byte[] data, string key, string filename)
+        {
+                FormDataContent.Add(new ByteArrayContent(data), key, filename);
         }
 
         public void AddFormEncoded(string name, string value)
@@ -59,6 +74,26 @@ namespace ShantiLk.Api
             var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = FormUrlEncodedContent };
             HttpResponseMessage responce = await client.SendAsync(req);
             if (responce.IsSuccessStatusCode || responce.StatusCode == HttpStatusCode.Found)
+                return responce;
+            else throw new Exception(responce.StatusCode.ToString());
+        }
+
+        public async Task<HttpResponseMessage> PostFile(string url)
+        {
+            HttpClient client = CreateClient();
+            var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = this.FormDataContent };
+            HttpResponseMessage responce = await client.SendAsync(req);
+            if (responce.IsSuccessStatusCode || responce.StatusCode == HttpStatusCode.Found)
+                return responce;
+            else throw new Exception(responce.StatusCode.ToString());
+        }
+
+        public async Task<HttpResponseMessage> Delete(string url)
+        {
+            HttpClient client = CreateClient();
+            var req = new HttpRequestMessage(HttpMethod.Delete, url);
+            HttpResponseMessage responce = await client.SendAsync(req);
+            if (responce.IsSuccessStatusCode)
                 return responce;
             else throw new Exception(responce.StatusCode.ToString());
         }
