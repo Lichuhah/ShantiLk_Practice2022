@@ -20,9 +20,9 @@ namespace ShantiLk.Api.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetBySemester(int SemesterId)
+        public ActionResult GetBySemester(int semesterId)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(SemesterId).Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(semesterId).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
 
@@ -30,9 +30,9 @@ namespace ShantiLk.Api.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetBySubject(int SubjectId)
+        public ActionResult GetBySubject(int subjectId)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(0, SubjectId).Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(0, subjectId).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
 
@@ -40,9 +40,9 @@ namespace ShantiLk.Api.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetFile(string MaterialHash)
+        public ActionResult GetFile(string materialHash)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetFile(MaterialHash).Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetFile(materialHash).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
     }

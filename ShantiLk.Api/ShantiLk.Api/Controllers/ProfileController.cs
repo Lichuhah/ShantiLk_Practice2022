@@ -16,5 +16,15 @@ namespace ShantiLk.Api.Controllers
             try { return Content(JsonConvert.SerializeObject(h_GetProfile().Result)); }
             catch (Exception ex) { return Forbid(); }
         }
+
+        [Route("GetEducationPlan")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetEducationPlan(string hash)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetEducationPlan(hash).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
     }
 }

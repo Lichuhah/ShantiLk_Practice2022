@@ -10,5 +10,8 @@ namespace ShantiLk.Api.Models.SuaiClasses.Answers
 
         [JsonProperty("studentinfo")]
         public s_StudentInfo Student { get; set; }
+
+        [JsonProperty("ep_link")]
+        public s_ProfileEducationPlan EducationPlan { get; set; }
     }
 }

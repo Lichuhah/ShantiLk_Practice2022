@@ -68,9 +68,9 @@ namespace ShantiLk.Api.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, loginData.Login),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, cookieData.SessionId),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, cookieData.SharedId)
+                new Claim(ClaimTypes.Name, loginData.Login),
+                new Claim(ClaimTypes.UserData, cookieData.SessionId),
+                new Claim(ClaimTypes.Hash, cookieData.SharedId),
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             try
