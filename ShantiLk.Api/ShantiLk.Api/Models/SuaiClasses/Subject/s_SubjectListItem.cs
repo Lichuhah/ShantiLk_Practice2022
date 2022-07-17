@@ -23,11 +23,8 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
         [JsonProperty("SemNum")]
         public int SemesterNumber { get; set; }
 
-        [JsonProperty("SemNum")]
+        [JsonProperty("RealSemNum")]
         public int RealSemesterNumber { get; set; }
-
-        [JsonProperty("messages")]
-        public List<string> Messages { get; set; }
 
         [JsonProperty("year")]
         public int Year { get; set; }
@@ -42,6 +39,6 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
         public List<s_DictGroup> Groups { get; set; }
 
         [JsonProperty("noticesCount")]
-        public int NewMessagesCount { get; set; }
+        public int? NewMessagesCount { get; set; }
     }
 }

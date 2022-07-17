@@ -6,14 +6,60 @@ namespace ShantiLk.Api.Controllers
     [Route("/Subjects")]
     public partial class SubjectController : Controller
     {
+        [Route("GetList")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetList(int SemesterId = 0, int ControlTypeId = 0)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetSubjects(SemesterId, ControlTypeId).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
+        [Route("Get")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetTask(int id)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetSubject(id).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
         [Route("GetTasks")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetTasks()
+        public ActionResult GetTasks(int SubjectId)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetSubjects().Result)); }
-            catch (Exception ex) { return Forbid(); }
+            throw new NotImplementedException();
+        }
+
+        [Route("GetAnnotation")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetAnnotation(int SubjectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Route("GetMessages")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetMessages(int SubjectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Route("GetMaterials")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetMaterials(int SubjectId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

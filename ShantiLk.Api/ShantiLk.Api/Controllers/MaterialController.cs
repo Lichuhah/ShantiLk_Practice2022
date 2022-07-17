@@ -6,23 +6,43 @@ namespace ShantiLk.Api.Controllers
     [Route("/Materials")]
     public partial class MaterialController : Controller
     {
-        [Route("GetMaterials")]
+        [Route("GetList")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
         public ActionResult GetMaterials()
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(null).Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetMaterials().Result)); }
             catch (Exception ex) { return Forbid(); }
         }
 
-        [Route("GetMaterialsBySemester")]
+        [Route("GetBySemester")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetMaterialsBySemester(int SemesterId)
+        public ActionResult GetBySemester(int SemesterId)
         {
             try { return Content(JsonConvert.SerializeObject(h_GetMaterials(SemesterId).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
+        [Route("GetBySubject")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetBySubject(int SubjectId)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(0, SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
+        [Route("GetFile")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetFile(string MaterialHash)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetFile(MaterialHash).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
     }

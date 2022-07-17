@@ -5,10 +5,7 @@ namespace ShantiLk.Api.Models.SuaiClasses.Answers
 {
     public class s_SubjectAnswer
     {
-        [JsonProperty("subjects")]
-        public List<s_SubjectListItem> Subjects { get; set; }
-
-        [JsonProperty("dictionaries")]
-        public s_SubjectListDictionares Dictionares { get; set; }
+        [JsonProperty("subject")]
+        public s_Subject Subject { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace ShantiLk.Api.Models.SuaiClasses.Profile
         public string StudentCardNum { get; set; }
 
         [JsonProperty("Chair")]
-        public string DepartmentNumber { get; set; }
+        public string DepartmentName { get; set; }
 
         [JsonProperty("depId")]
         public string InstituteId { get; set; }
