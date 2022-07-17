@@ -78,8 +78,102 @@ namespace ShantiLk.Api.Controllers
                 AnnotationHash = answer.Annotation.Annotation.Hash,
                 EducationPlanHash = answer.Annotation.EducationPlan.Hash,
                 Messages = answer.Messages,
-                Mark = answer.Mark
+                Mark = answer.Mark,
+                Tasks = answer.Tasks.Select(y => new SubjectTask
+                {
+                    Id = y.Id,
+                    Name = y.Name,
+                    CurrentMark = y.CurrentMark,
+                    MaxMark = y.MaxMark,
+                    Status = new DictTaskStatus
+                    {
+                        Id = y.StatusId,
+                        Name = y.StatusName
+                    },
+                    Group = new DictGroup
+                    {
+                        Id = y.GroupId,
+                        Name = y.GroupName
+                    },
+                    IsExecuted = y.IsExecuted > 0 ? true : false
+                }).ToList(),
+                Materials = answer.Materials.Select(y => new SubjectMaterial
+                {
+                    Id = y.Id,
+                    Name = y.Name,
+                    Url = y.Url,
+                    FileHash = y.FileLink.Substring(11),   
+                }).ToList()
             };
+        }
+
+        private async Task<List<SubjectTask>> h_GetSubjectTasks(int SubjectId)
+        {
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            client.AddFormEncoded("id", SubjectId.ToString());
+            client.AddFormEncoded("eid", HttpContext.User.Claims.Select(x => x.Value).ToList()[0].Substring(2));
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/subjectItemStudent/").Result;
+            string result = resp.Content.ReadAsStringAsync().Result;
+            List<s_SubjectTask> answer = JsonConvert.DeserializeObject<s_SubjectAnswer>(result).Subject.Tasks;
+            return answer.Select(y => new SubjectTask
+            {
+                Id = y.Id,
+                Name = y.Name,
+                CurrentMark = y.CurrentMark,
+                MaxMark = y.MaxMark,
+                Status = new DictTaskStatus
+                {
+                    Id = y.StatusId,
+                    Name = y.StatusName
+                },
+                Group = new DictGroup
+                {
+                    Id = y.GroupId,
+                    Name = y.GroupName
+                },
+                IsExecuted = y.IsExecuted > 0 ? true : false
+            }).ToList();
+        }
+
+        private async Task<List<SubjectMaterial>> h_GetSubjectMaterials(int SubjectId)
+        {
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            client.AddFormEncoded("id", SubjectId.ToString());
+            client.AddFormEncoded("eid", HttpContext.User.Claims.Select(x => x.Value).ToList()[0].Substring(2));
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/subjectItemStudent/").Result;
+            string result = resp.Content.ReadAsStringAsync().Result;
+            List<s_SubjectMaterial> answer = JsonConvert.DeserializeObject<s_SubjectAnswer>(result).Subject.Materials;
+            return answer.Select(y => new SubjectMaterial
+            {
+                Id = y.Id,
+                Name = y.Name,
+                Url = y.Url,
+                FileHash = y.FileLink.Substring(11),
+            }).ToList();
+        }
+
+        private async Task<byte[]> h_GetAnnotation(int SubjectId)
+        {
+           Subject subject = this.h_GetSubject(SubjectId).Result;
+           SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+           HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-eduplan/" + subject.AnnotationHash).Result;
+           return resp.Content.ReadAsByteArrayAsync().Result;
+        }
+
+        private async Task<byte[]> h_GetWorkProgramm(int SubjectId)
+        {
+            Subject subject = this.h_GetSubject(SubjectId).Result;
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-eduplan/" + subject.WorkProgrammHash).Result;
+            return resp.Content.ReadAsByteArrayAsync().Result;
+        }
+
+        private async Task<byte[]> h_GetEducationPlan(int SubjectId)
+        {
+            Subject subject = this.h_GetSubject(SubjectId).Result;
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-eduplan/" + subject.EducationPlanHash).Result;
+            return resp.Content.ReadAsByteArrayAsync().Result;
         }
     }
 }

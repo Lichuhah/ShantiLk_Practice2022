@@ -9,11 +9,22 @@ namespace ShantiLk.Api.Controllers
 {
     public partial class TaskController
     {
-        private async Task<List<TaskListItem>> h_GetTasks()
+        private async Task<List<TaskListItem>> h_GetTasks(int SemesterId, int SubjectId, int TypeId, int StatusId)
         {
             SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
             client.AddFormEncoded("iduser", "0");
-            HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-tasksdictionaries/").Result;
+            HttpResponseMessage resp = new HttpResponseMessage();
+            if (SemesterId != 0 || SubjectId != 0 || StatusId !=0 || TypeId !=0)
+            {
+                client.AddFormEncoded("semester", SemesterId.ToString());
+                client.AddFormEncoded("subject", SubjectId.ToString());
+                client.AddFormEncoded("type", TypeId.ToString());
+                client.AddFormEncoded("status", StatusId.ToString());
+                resp = client.Post("https://pro.guap.ru/get-student-tasks/").Result;
+            } else
+            {
+                resp = client.Post("https://pro.guap.ru/get-student-tasksdictionaries/").Result;
+            }          
             string result = resp.Content.ReadAsStringAsync().Result;
             List<s_TaskListItem> data = JsonConvert.DeserializeObject<s_TaskListAnswer>(result).Tasks;
             return data.Select(x => new TaskListItem()
@@ -38,7 +49,7 @@ namespace ShantiLk.Api.Controllers
                     Id = x.SemesterNumber,
                     Name = x.SemesterName
                 },
-                Status = new Models.ShantiClasses.Dict.DictTaskStatus()
+                Status = new DictTaskStatus()
                 {
                     Id = x.StatusId,
                     Name = x.StatusName
@@ -82,7 +93,7 @@ namespace ShantiLk.Api.Controllers
                 },
                 File = new DictFile()
                 {
-                    Link = taskData.FileLink,
+                    Hash = taskData.FileLink.Length > 11 ? taskData.FileLink.Substring(11) : string.Empty,
                     Name = taskData.FileName
                 },
                 Reports = answer.Reports.Select(x=>new Report
@@ -92,15 +103,54 @@ namespace ShantiLk.Api.Controllers
                     DateChecked = x.CheckedDate,
                     StudentComment = x.StudentComment,
                     TeacherComment = x.TeacherComment,
-                    FileLink = x.FileLink,
+                    FileHash = x.FileLink.Substring(12),
                     CurrentMark = answer.Reports.LastOrDefault()?.Mark, 
-                    Status = new Models.ShantiClasses.Dict.DictTaskStatus
+                    Status = new DictTaskStatus
                     {
                         Id = x.StatusId,
                         Name = x.StatusName
                     },                   
                 }).ToList()
             };
+        }
+
+        private async Task<byte[]> h_GetMaterialForTask(int id)
+        {
+            Task task = this.h_GetTask(id).Result;
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-task/" + task.File.Hash).Result;
+            return resp.Content.ReadAsByteArrayAsync().Result;
+        }
+
+        private async Task<List<Report>> h_GetReportsForTask(int id)
+        {
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            client.AddFormEncoded("task_id", id.ToString());
+            HttpResponseMessage resp = client.Post("https://pro.guap.ru/get-student-task/" + id.ToString()).Result;
+            string result = resp.Content.ReadAsStringAsync().Result;
+            s_TaskAnswer answer = JsonConvert.DeserializeObject<s_TaskAnswer>(result);
+            return answer.Reports.Select(x => new Report
+            {
+                Id = x.Id,
+                DateCreated = x.CreatedDate,
+                DateChecked = x.CheckedDate,
+                StudentComment = x.StudentComment,
+                TeacherComment = x.TeacherComment,
+                Status = new DictTaskStatus
+                {
+                    Id = x.Id,
+                    Name = x.StatusName
+                },
+                FileHash = x.FileLink.Substring(12),
+                CurrentMark = x.Mark
+            }).ToList();
+        }
+
+        private async Task<byte[]> h_DownloadReport(string hash)
+        {
+            SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            HttpResponseMessage resp = client.Get("https://pro.guap.ru/get-report/" + hash).Result;
+            return resp.Content.ReadAsByteArrayAsync().Result;
         }
     }
 }

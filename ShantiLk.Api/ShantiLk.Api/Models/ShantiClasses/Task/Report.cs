@@ -8,8 +8,7 @@
         public string StudentComment { get; set; }
         public string TeacherComment { get; set; }
         public Dict.DictTaskStatus Status { get; set; }
-        public string FileLink { get; set; }
-        public int MaxMark { get; set; }
+        public string FileHash { get; set; }
         public int? CurrentMark { get; set; }
     }
 }

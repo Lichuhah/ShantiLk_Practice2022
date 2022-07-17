@@ -66,5 +66,12 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
         [JsonProperty("nameMark")]
         public string Mark { get; set; }
 
+        [JsonProperty("tasks")]
+        public List<s_SubjectTask> Tasks { get; set; }
+
+        [JsonProperty("materials")]
+        public List<s_SubjectMaterial> Materials { get; set; }
+
+
     }
 }

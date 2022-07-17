@@ -17,5 +17,7 @@ namespace ShantiLk.Api.Models.ShantiClasses.Subject
         public List<string> Messages { get; set; }
         public int MaxPoints { get; set; }
         public int CurrentPoints { get; set; }
+        public List<SubjectTask> Tasks { get; set; }
+        public List<SubjectMaterial> Materials { get; set; }
     }
 }

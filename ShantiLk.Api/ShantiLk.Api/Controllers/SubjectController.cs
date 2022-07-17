@@ -32,7 +32,8 @@ namespace ShantiLk.Api.Controllers
         [ProducesResponseType(403, Type = typeof(void))]
         public ActionResult GetTasks(int SubjectId)
         {
-            throw new NotImplementedException();
+            try { return Content(JsonConvert.SerializeObject(h_GetSubjectTasks(SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
         }
 
         [Route("GetAnnotation")]
@@ -41,17 +42,30 @@ namespace ShantiLk.Api.Controllers
         [ProducesResponseType(403, Type = typeof(void))]
         public ActionResult GetAnnotation(int SubjectId)
         {
-            throw new NotImplementedException();
+            try { return Content(JsonConvert.SerializeObject(h_GetAnnotation(SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
         }
 
-        [Route("GetMessages")]
+        [Route("GetEducationPlan")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetMessages(int SubjectId)
+        public ActionResult GetEducationPlan(int SubjectId)
         {
-            throw new NotImplementedException();
+            try { return Content(JsonConvert.SerializeObject(h_GetEducationPlan(SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
         }
+
+        [Route("GetWorkProgramm")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ActionResult))]
+        [ProducesResponseType(403, Type = typeof(void))]
+        public ActionResult GetWorkProgramm(int SubjectId)
+        {
+            try { return Content(JsonConvert.SerializeObject(h_GetWorkProgramm(SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
+        }
+
 
         [Route("GetMaterials")]
         [HttpGet]
@@ -59,7 +73,8 @@ namespace ShantiLk.Api.Controllers
         [ProducesResponseType(403, Type = typeof(void))]
         public ActionResult GetMaterials(int SubjectId)
         {
-            throw new NotImplementedException();
+            try { return Content(JsonConvert.SerializeObject(h_GetSubjectMaterials(SubjectId).Result)); }
+            catch (Exception ex) { return Forbid(); }
         }
     }
 }
