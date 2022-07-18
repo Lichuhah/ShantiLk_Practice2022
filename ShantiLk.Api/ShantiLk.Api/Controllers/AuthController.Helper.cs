@@ -12,9 +12,15 @@ namespace ShantiLk.Api.Controllers
             SuaiHttpClient client = new SuaiHttpClient();
             var responce = await client.Get("https://pro.guap.ru/exters/");
             string sessionid = responce.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value.First().Split(';')[0].Substring(10);
-            sessionid = GetSessionId(data.Login, data.Password, sessionid).Result;
-            string sharedid = GetSharedId(sessionid).Result;
-            return Authorization(data, new CookieData { SessionId = sessionid, SharedId = sharedid }).Result;
+            try
+            {
+                sessionid = GetSessionId(data.Login, data.Password, sessionid).Result;
+                string sharedid = GetSharedId(sessionid).Result;
+                return Authorization(data, new CookieData { SessionId = sessionid, SharedId = sharedid }).Result;
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         private async Task<bool> h_Logout()
@@ -51,6 +57,8 @@ namespace ShantiLk.Api.Controllers
             client.AddFormEncoded("_username", username);
             client.AddFormEncoded("_password", password);
             var responce = await client.Post("https://pro.guap.ru/user/login_check");
+            if (!responce.IsSuccessStatusCode && responce.StatusCode != System.Net.HttpStatusCode.Found) 
+                throw new Exception();
             var sessid = responce.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
             return sessid.First().Split(';')[0].Substring(10);
         }
@@ -60,6 +68,8 @@ namespace ShantiLk.Api.Controllers
             SuaiHttpClient client = new SuaiHttpClient();
             client.AddCookie("PHPSESSID", sessId);
             var responce = await client.Get("https://pro.guap.ru/login_redirect");
+            if (!responce.IsSuccessStatusCode && responce.StatusCode != System.Net.HttpStatusCode.Found)
+                throw new Exception();
             var sharedId = responce.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
             return sharedId.First().Split(';')[0].Substring(15);
         }

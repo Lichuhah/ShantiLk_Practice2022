@@ -34,9 +34,6 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
         [JsonProperty("IsPractice")]
         public int IsPractice { get; set; }
 
-        //[JsonProperty("TotalHours")]
-        //public int CountHours { get; set; }
-
         [JsonProperty("WeeksInTerm")]
         public int CountWeeks { get; set; }
         [JsonProperty("realSemNum")]
@@ -71,7 +68,6 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
 
         [JsonProperty("materials")]
         public List<s_SubjectMaterial> Materials { get; set; }
-
 
     }
 }

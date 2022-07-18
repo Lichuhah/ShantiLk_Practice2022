@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ShantiLk.Api.Models.ShantiClasses.Teacher;
 
 namespace ShantiLk.Api.Controllers
 {

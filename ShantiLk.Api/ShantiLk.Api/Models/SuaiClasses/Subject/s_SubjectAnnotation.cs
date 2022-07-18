@@ -14,4 +14,3 @@ namespace ShantiLk.Api.Models.SuaiClasses.Subject
         public s_SubjectFile EducationPlan { get; set; }
     }
 }
-//https://pro.guap.ru/get-student-eduplan/910bbfc355506949ebb656ae8112fbd8

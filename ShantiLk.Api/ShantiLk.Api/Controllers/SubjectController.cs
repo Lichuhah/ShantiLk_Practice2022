@@ -100,15 +100,15 @@ namespace ShantiLk.Api.Controllers
         /// <summary>
         ///     Get list materials for discipline
         /// </summary>
-        /// <param name="subjectId"> Id needed discipline</param>
+        /// <param name="id"> Id needed discipline</param>
         /// <returns></returns>
         [Route("GetMaterials")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetMaterials(int subjectId)
+        public ActionResult GetMaterials(int id)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetSubjectMaterials(subjectId).Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetSubjectMaterials(id).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
     }

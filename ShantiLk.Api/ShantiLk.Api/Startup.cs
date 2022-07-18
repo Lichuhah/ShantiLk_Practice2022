@@ -38,13 +38,9 @@ namespace ShantiLk.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shanti API Beta", Version = "v1" });
-                // Set Title and version from config
-                // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                // pick comments from classes, include controller comments: another tip from StackOverflow
                 c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-                // enable the annotations on Controller classes [SwaggerTag]
             });
         }
 

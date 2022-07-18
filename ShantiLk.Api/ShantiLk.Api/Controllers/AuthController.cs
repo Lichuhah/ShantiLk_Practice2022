@@ -39,23 +39,5 @@ namespace ShantiLk.Api.Controllers
             try { return Content(JsonConvert.SerializeObject(h_Logout().Result)); }
             catch (Exception ex) { return Forbid(); }
         }
-
-        [Route("CheckLogin")]
-        [AllowAnonymous]
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ActionResult))]
-        [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult CheckLogin()
-        {
-            try { return Content(JsonConvert.SerializeObject(h_CheckLogin().Result)); }
-            catch (Exception ex) { return Forbid(); }
-        }
-
-        [Route("Test")]
-        [HttpGet]
-        public ActionResult Test()
-        {
-            return Content("good");
-        }
     }
 }
