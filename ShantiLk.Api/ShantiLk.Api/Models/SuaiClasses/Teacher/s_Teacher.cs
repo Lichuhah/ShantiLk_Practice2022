@@ -5,7 +5,7 @@ namespace ShantiLk.Api.Models.SuaiClasses.Teacher
     public class s_Teacher
     {
         [JsonProperty("id")]
-        public INT Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("username")]
         public string Login { get; set; }

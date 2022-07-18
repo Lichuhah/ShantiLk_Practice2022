@@ -44,9 +44,10 @@ namespace ShantiLk.Api.Controllers
             };
         }
 
-        private async Task<byte[]> h_GetEducationPlan(string hash)
+        private async Task<byte[]> h_GetEducationPlan()
         {
             SuaiHttpClient client = new SuaiHttpClient(HttpContext.User);
+            string hash = h_GetProfile().Result.EducationPlanHash;
             HttpResponseMessage resp = client.Get("https://pro.guap.ru/get-student-eduplan/" + hash).Result;
             byte[] result = resp.Content.ReadAsByteArrayAsync().Result;
 

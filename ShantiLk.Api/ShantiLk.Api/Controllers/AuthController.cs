@@ -9,6 +9,11 @@ namespace ShantiLk.Api.Controllers
     [Route("/Auth")]
     public partial class AuthController : ControllerBase
     {
+        /// <summary>
+        ///     Return result of authorization
+        /// </summary>
+        /// <param name="data">(body) Login and Password from SUAI LK</param>
+        /// <returns></returns>
         [Route("Login")]
         [AllowAnonymous]
         [HttpPost]
@@ -20,6 +25,11 @@ namespace ShantiLk.Api.Controllers
             catch (Exception ex) { return Forbid(); }
         }
 
+        /// <summary>
+        ///     Returns result of logout
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
         [Route("Logout")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]

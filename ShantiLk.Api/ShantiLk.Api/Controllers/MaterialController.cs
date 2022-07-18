@@ -6,36 +6,27 @@ namespace ShantiLk.Api.Controllers
     [Route("/Materials")]
     public partial class MaterialController : Controller
     {
+        /// <summary>
+        ///     Get list of materials for the current semester
+        /// </summary>
+        /// <param name="semesterId">(optional) Id needed semester</param>
+        /// <param name="subjectId">(optional) Id needed discipline</param>
+        /// <returns></returns>
         [Route("GetList")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
         [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetMaterials()
+        public ActionResult GetMaterials(int semesterId = 0, int subjectId = 0)
         {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials().Result)); }
+            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(semesterId, subjectId).Result)); }
             catch (Exception ex) { return Forbid(); }
         }
 
-        [Route("GetBySemester")]
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ActionResult))]
-        [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetBySemester(int semesterId)
-        {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(semesterId).Result)); }
-            catch (Exception ex) { return Forbid(); }
-        }
-
-        [Route("GetBySubject")]
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ActionResult))]
-        [ProducesResponseType(403, Type = typeof(void))]
-        public ActionResult GetBySubject(int subjectId)
-        {
-            try { return Content(JsonConvert.SerializeObject(h_GetMaterials(0, subjectId).Result)); }
-            catch (Exception ex) { return Forbid(); }
-        }
-
+        /// <summary>
+        ///     Download material file
+        /// </summary>
+        /// <param name="materialHash">Hash material file</param>
+        /// <returns></returns>
         [Route("GetFile")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ActionResult))]
